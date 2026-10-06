@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-serif-vintage {
+    font-family: var(--font-newsreader), 'Newsreader', 'Times New Roman', Georgia, serif;
+  }
+  .font-cinzel {
+    font-family: var(--font-cinzel), 'Cinzel', Georgia, serif;
+  }
+  .font-sans-ui {
+    font-family: var(--font-sans), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Vintage Newspaper Paper Background and Borders */
+.bg-newspaper {
+  background-color: #fbf8f0;
+  background-image: 
+    radial-gradient(#e5dec9 0.75px, transparent 0.75px),
+    radial-gradient(#e5dec9 0.75px, #fbf8f0 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+.border-newspaper-double {
+  border-style: double;
+  border-width: 4px;
+  border-color: #2c221e;
+}
+
+.border-newspaper-thick {
+  border-style: solid;
+  border-width: 3px;
+  border-color: #2c221e;
+}
+
+/* Custom Print Optimization for Newspaper */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-newspaper-container {
+    box-shadow: none !important;
+    border: 2px solid #000 !important;
+    margin: 0 !important;
+    padding: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}

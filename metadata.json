@@ -1,0 +1,6 @@
+{
+  "name": "Tarih Muhabiri",
+  "description": "Tarih dersleri için birincil belgelere dayalı röportaj, 1919 dönemi gazete sayfası ve sesli podcast hazırlama uygulaması.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
