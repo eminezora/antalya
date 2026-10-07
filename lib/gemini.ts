@@ -1,11 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
 
-if (!process.env.GEMINI_API_KEY) {
-  console.warn("UYARI: GEMINI_API_KEY ortam değişkeni tanımlanmamış.");
+const apiKey = process.env.GEMINI_API_KEY || process.env.antalya || "";
+
+if (!apiKey) {
+  console.warn("UYARI: GEMINI_API_KEY veya antalya ortam değişkeni tanımlanmamış.");
 }
 
 export const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || "",
+  apiKey,
   httpOptions: {
     headers: {
       "User-Agent": "aistudio-build",

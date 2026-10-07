@@ -2,9 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateContentWithRetry } from "@/lib/gemini";
 import { MODEL_NAME, SYSTEM_INSTRUCTION } from "@/lib/talimat";
 import { Type } from "@google/genai";
+import { getSessionUser } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
+    const user = await getSessionUser(req);
+    if (!user) {
+      return NextResponse.json(
+        { error: "Gazete oluşturabilmek için lütfen önce giriş yapınız." },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const { documents, interviewTurns } = body;
 

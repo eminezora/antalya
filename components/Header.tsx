@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { 
   FileText, 
   MessageSquare, 
@@ -10,7 +11,12 @@ import {
   BookOpen, 
   Scale, 
   CheckCircle2,
-  X
+  X,
+  LogIn,
+  UserPlus,
+  LogOut,
+  User,
+  ShieldCheck
 } from "lucide-react";
 
 interface HeaderProps {
@@ -31,13 +37,14 @@ export function Header({
   hasPodcast,
 }: HeaderProps) {
   const [showGuide, setShowGuide] = useState(false);
+  const { user, logout, openAuthModal, isLoading } = useAuth();
 
   return (
     <header className="border-b border-[#d8cfbe] bg-[#fbf8f1]/90 backdrop-blur sticky top-0 z-30 shadow-xs no-print">
       <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Logo & Başlık */}
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+          {/* Logo & Başlık & Mobil Düğmeler */}
+          <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-start">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-[#2c221e] text-[#fbf8f0] flex items-center justify-center shadow-sm">
                 <Newspaper className="w-5 h-5 text-[#d4af37]" />
@@ -57,15 +64,38 @@ export function Header({
               </div>
             </div>
 
-            {/* Bilgi Düğmesi (Mobil) */}
-            <button
-              onClick={() => setShowGuide(true)}
-              className="sm:hidden p-2 text-[#705e52] hover:text-[#2c221e] rounded-lg hover:bg-[#efe7d8] transition-colors"
-              title="Kullanım Rehberi"
-              aria-label="Kullanım Rehberi"
-            >
-              <HelpCircle className="w-5 h-5" />
-            </button>
+            {/* Mobil Sağ Düğmeler (Kılavuz + Giriş) */}
+            <div className="flex lg:hidden items-center gap-1.5">
+              <button
+                onClick={() => setShowGuide(true)}
+                className="p-2 text-[#705e52] hover:text-[#2c221e] rounded-lg hover:bg-[#efe7d8] transition-colors"
+                title="Kullanım Rehberi"
+                aria-label="Kullanım Rehberi"
+              >
+                <HelpCircle className="w-5 h-5" />
+              </button>
+
+              {!isLoading && (
+                user ? (
+                  <button
+                    onClick={logout}
+                    className="p-2 text-red-700 hover:text-red-900 rounded-lg hover:bg-red-50 transition-colors"
+                    title="Çıkış Yap"
+                    aria-label="Çıkış Yap"
+                  >
+                    <LogOut className="w-5 h-5" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => openAuthModal("login")}
+                    className="px-2.5 py-1.5 bg-[#2c221e] text-[#fbf8f0] text-xs font-semibold rounded-lg flex items-center gap-1"
+                  >
+                    <LogIn className="w-3.5 h-3.5 text-[#d4af37]" />
+                    <span>Giriş</span>
+                  </button>
+                )
+              )}
+            </div>
           </div>
 
           {/* 3 Ana Bölüm Navigasyonu */}
@@ -124,8 +154,8 @@ export function Header({
             </button>
           </nav>
 
-          {/* Masaüstü Rehber Butonu */}
-          <div className="hidden sm:flex items-center gap-2">
+          {/* Masaüstü Aksiyonları (Kurallar + Giriş / Profil) */}
+          <div className="hidden lg:flex items-center gap-2.5">
             <button
               onClick={() => setShowGuide(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#5c4a3e] bg-[#ede3d1] hover:bg-[#e2d5bf] border border-[#d8c8af] transition-colors"
@@ -133,6 +163,46 @@ export function Header({
               <BookOpen className="w-3.5 h-3.5" />
               <span>Pedagojik Kurallar</span>
             </button>
+
+            {/* Kullanıcı Girişi / Profil Alanı */}
+            {!isLoading && (
+              user ? (
+                <div className="flex items-center gap-2 bg-[#ede4d2] px-3 py-1.5 rounded-lg border border-[#d8c8af]">
+                  <div className="w-6 h-6 rounded-full bg-[#2c221e] text-[#d4af37] flex items-center justify-center text-[11px] font-bold">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="text-left text-xs">
+                    <span className="font-semibold text-[#2c221e] block leading-tight max-w-[120px] truncate" title={user.name}>
+                      {user.name}
+                    </span>
+                  </div>
+                  <button
+                    onClick={logout}
+                    className="ml-1 text-[#7a6454] hover:text-red-700 p-1 rounded-md hover:bg-[#e2d6c0] transition-colors"
+                    title="Çıkış Yap"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => openAuthModal("login")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#2c221e] bg-[#ede3d1] hover:bg-[#e2d5bf] border border-[#d8c8af] transition-colors"
+                  >
+                    <LogIn className="w-3.5 h-3.5 text-[#8a6829]" />
+                    <span>Giriş Yap</span>
+                  </button>
+                  <button
+                    onClick={() => openAuthModal("register")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#fbf8f0] bg-[#2c221e] hover:bg-[#433530] transition-colors shadow-2xs"
+                  >
+                    <UserPlus className="w-3.5 h-3.5 text-[#d4af37]" />
+                    <span>Kayıt Ol</span>
+                  </button>
+                </div>
+              )
+            )}
           </div>
         </div>
       </div>

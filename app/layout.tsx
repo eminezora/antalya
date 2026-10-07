@@ -1,6 +1,8 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import { Cinzel, Newsreader, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
+import { AuthProvider } from '@/context/AuthContext';
+import { AuthModal } from '@/components/AuthModal';
 
 const cinzel = Cinzel({
   subsets: ['latin'],
@@ -39,14 +41,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="tr"
       className={`${cinzel.variable} ${newsreader.variable} ${plusJakartaSans.variable}`}
     >
       <body suppressHydrationWarning className="bg-[#f7f4ec] text-[#2c221e] antialiased selection:bg-[#c9a66b]/30">
-        {children}
+        <AuthProvider>
+          <AuthModal />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
